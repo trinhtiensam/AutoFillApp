@@ -1,6 +1,8 @@
-name: Build AutoFillApp EXE
+name: Build AutoFillApp
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -8,22 +10,27 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v3
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x' # chỉnh đúng version project của bạn
+          dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore AutoFillApp.csproj
+        run: dotnet restore
 
-      - name: Publish EXE (self-contained, single file)
-        run: dotnet publish AutoFillApp.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o out
+      - name: Publish single file exe
+        run: dotnet publish AutoFillApp.csproj -c Release -r win-x64 `
+              --self-contained true `
+              -p:PublishSingleFile=true `
+              -p:IncludeNativeLibrariesForSelfExtract=true `
+              -p:PublishTrimmed=true `
+              -o publish
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: AutoFillApp_EXE
-          path: out
+          name: AutoFillApp-exe
+          path: publish/AutoFillApp.exe

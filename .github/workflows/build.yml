@@ -1,19 +1,20 @@
 name: Build AutoFillApp EXE
 
 on:
-  workflow_dispatch:   # cho phép build thủ công
   push:
-    branches: [ "main" ]   # tự động build khi push code mới
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout source
+    - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Setup .NET 8
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
@@ -21,11 +22,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build Release EXE
-      run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:SelfContained=true
+    - name: Build
+      run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
 
     - name: Upload EXE artifact
       uses: actions/upload-artifact@v3
       with:
         name: AutoFillApp-exe
-        path: bin/Release/net8.0-windows/win-x64/publish/AutoFillApp.exe
+        path: publish/

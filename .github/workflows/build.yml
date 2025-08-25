@@ -29,8 +29,16 @@ jobs:
               -p:PublishTrimmed=true `
               -o publish
 
+      - name: Copy profiles.json
+        run: |
+          echo {
+          echo   "Name": "Nguyen Van A",
+          echo   "Email": "test@example.com",
+          echo   "Phone": "0123456789"
+          echo } > publish/profiles.json
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: AutoFillApp-exe
-          path: publish/AutoFillApp.exe
+          name: AutoFillApp-Package
+          path: publish/

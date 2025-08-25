@@ -7,14 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022   # fix cứng version, tránh warning windows-2025
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4   # update v4 luôn cho chuẩn
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
@@ -31,14 +31,14 @@ jobs:
 
       - name: Copy profiles.json
         run: |
-          echo {
-          echo   "Name": "Nguyen Van A",
-          echo   "Email": "test@example.com",
-          echo   "Phone": "0123456789"
-          echo } > publish/profiles.json
+          echo { > publish/profiles.json
+          echo   "Name": "Nguyen Van A", >> publish/profiles.json
+          echo   "Email": "test@example.com", >> publish/profiles.json
+          echo   "Phone": "0123456789" >> publish/profiles.json
+          echo } >> publish/profiles.json
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4   # update v4
         with:
           name: AutoFillApp-Package
           path: publish/
